@@ -1,0 +1,25 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Chat (Slack)",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "start": "start-server -s ./frontend/build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm ci --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biryukovpavel/frontend-project-12.git"
+  },
+  "author": "Pavel Biryukov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/biryukovpavel/frontend-project-12/issues"
+  },
+  "homepage": "https://github.com/biryukovpavel/frontend-project-12#readme",
+  "dependencies": {
+    "@hexlet/chat-server": "^1.1.6"
+  }
+}
