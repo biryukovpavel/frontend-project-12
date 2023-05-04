@@ -19,9 +19,13 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     setLoggedIn(false);
   };
+  const getAuthHeader = () => {
+    const { token } = currentUser || {};
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <AuthContext.Provider value={{ loggedIn, logIn, logOut, getAuthHeader }}>
       {children}
     </AuthContext.Provider>
   );
@@ -49,25 +53,27 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path='*' element={<NotFoundPage />} />
-          <Route
-            path='/'
-            element={(
-              <PrivateRoute>
-                <ChatPage />
-              </PrivateRoute>
-            )}
-          />
-          <Route
-            path='login'
-            element={(
-              <UnprivateRoute>
-                <LoginPage />
-              </UnprivateRoute>
-            )}
-          />
-        </Routes>
+        <div className="d-flex flex-column h-100">
+          <Routes>
+            <Route path='*' element={<NotFoundPage />} />
+            <Route
+              path='/'
+              element={(
+                <PrivateRoute>
+                  <ChatPage />
+                </PrivateRoute>
+              )}
+            />
+            <Route
+              path='login'
+              element={(
+                <UnprivateRoute>
+                  <LoginPage />
+                </UnprivateRoute>
+              )}
+            />
+          </Routes>
+        </div>
       </BrowserRouter>
     </AuthProvider>
   );
