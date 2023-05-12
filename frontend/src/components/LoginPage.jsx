@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import { useFormik } from "formik";
 import axios from "axios";
 import routes from "../routes.js";
-import useAuth from "../hooks/index.jsx";
+import { useAuth } from "../hooks/index.jsx";
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -33,6 +33,11 @@ const LoginPage = () => {
     },
     validationSchema: SignupSchema,
     onSubmit: async (values, action) => {
+      try {
+        await axios.post('/api/v1/signup', { username: 'user', password: '123456' });
+      } catch (error) {
+        console.log('user alredy exists')
+      }
       try {
         const response = await axios.post(routes.loginPath(), values);
         auth.logIn(response.data);

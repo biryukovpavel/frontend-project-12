@@ -1,13 +1,12 @@
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import useAuth from 'hooks';
+import { useAuth } from 'hooks';
 import React, { useEffect } from 'react';
-import { Button, Col, Container, Form, InputGroup, Nav, Row } from 'react-bootstrap';
+import { Button, Col, Container, Nav, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import routes from 'routes';
 import { setInitialState } from 'slices/channelsSlice';
+import NewMessage from './NewMessage.jsx';
 
 const getCurrentChannel = (state) => {
   const { channels, currentChannelId } = state.channels;
@@ -76,18 +75,14 @@ const ChatPage = () => {
             <span className='text-muted'>{messages.length} сообщений</span>
           </div>
           <div className='overflow-auto px-5'>
+            {messages.map(({ id, username, body }) => (
+              <div key={id} className='text-break'>
+                <b>{username}</b>: {body}
+              </div>
+            ))}
           </div>
-          <div className='mt-auto px-5 py-3'>
-            <Form className='py-1 border rounded-2'>
-              <InputGroup>
-                <Form.Control className='border-0'>
-
-                </Form.Control>
-                <Button type='submit' variant=''>
-                  <FontAwesomeIcon size='xl' icon={faPaperPlane} style={{color: '#1368fb'}}></FontAwesomeIcon>
-                </Button>
-              </InputGroup>
-            </Form>
+          <div className='mt-auto px-3 py-3'>
+            <NewMessage channel={channel} />
           </div>
         </Col>
       </Row>

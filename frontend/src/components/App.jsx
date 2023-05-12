@@ -4,8 +4,8 @@ import NotFoundPage from './NotFoundPage';
 import LoginPage from './LoginPage';
 import ChatPage from './ChatPage';
 import React, { useState } from 'react';
-import AuthContext from '../contexts/index.jsx';
-import useAuth from "../hooks/index.jsx";
+import { AuthContext } from '../contexts/index.jsx';
+import { useAuth } from "../hooks/index.jsx";
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut, getAuthHeader }}>
+    <AuthContext.Provider value={{ loggedIn, logIn, logOut, getAuthHeader, currentUser }}>
       {children}
     </AuthContext.Provider>
   );
