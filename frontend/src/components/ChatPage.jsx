@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useAuth } from 'hooks';
-import React, { useEffect } from 'react';
-import { Button, Col, Container, Nav, Row } from 'react-bootstrap';
+import React, { useEffect, useRef } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import routes from 'routes';
 import { setInitialState } from 'slices/channelsSlice';
 import NewMessage from './NewMessage.jsx';
+import Channels from './Channels.jsx';
+import Modal from './modals/Modal.jsx';
 
 const getCurrentChannel = (state) => {
   const { channels, currentChannelId } = state.channels;
@@ -23,16 +25,16 @@ const getMessages = (state) => {
 
 const ChatPage = () => {
   const auth = useAuth();
-  const { channels, currentChannelId } = useSelector((state) => state.channels);
   const channel = useSelector(getCurrentChannel);
   const messages = useSelector(getMessages);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const messagesEl = useRef(null);
 
   useEffect(() => {
     const requestData = async () => {
       try {
-        const { data } = await axios.get(routes.dataPath(), {headers: auth.getAuthHeader()});
+        const { data } = await axios.get(routes.dataPath(), { headers: auth.getAuthHeader() });
         dispatch(setInitialState(data));
       } catch (error) {
         if (error.response.status === 401) {
@@ -46,35 +48,24 @@ const ChatPage = () => {
     requestData();
   }, [dispatch, auth, navigate]);
 
+  useEffect(() => {
+    const lastItem = messagesEl.current.lastElementChild;
+    lastItem?.scrollIntoView();
+  }, [messages.length]);
+
   return (
     <Container className='h-100 my-4 overflow-hidden rounded shadow'>
       <Row className='h-100 bg-white flex-md-row'>
-        <Col  xs={4} md={2} className='border-end px-0 bg-light flex-column h-100 d-flex'>
-          <div className='d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4'>
-            <b>Каналы</b>
-          </div>
-          <Nav variant='pills' className='flex-column px-2 mb-3 overflow-auto h-100 d-block'>
-            {channels.map((channel) => (
-              <Nav.Item key={channel.id}>
-                <Button
-                  type='button'
-                  variant={channel.id === currentChannelId ? 'secondary' :''}
-                  className='w-100 text-start rounded-0'
-                >
-                  <span className='me-1'>#</span>
-                  {channel.name}
-                </Button>
-              </Nav.Item>
-            ))}
-          </Nav>
+        <Col xs={4} md={2} className='border-end px-0 bg-light flex-column h-100 d-flex'>
+          <Channels />
         </Col>
 
-        <Col className='p-0 h-100 d-flex flex-column'>
+        <Col xs={8} md={10} className='p-0 h-100 d-flex flex-column'>
           <div className='bg-light mb-4 p-3 shadow-sm small'>
-            <p className='m-0'><b># {channel?.name}</b></p>
+            <p className='m-0 text-truncate'><b># {channel?.name}</b></p>
             <span className='text-muted'>{messages.length} сообщений</span>
           </div>
-          <div className='overflow-auto px-5'>
+          <div ref={messagesEl} className='overflow-auto px-5'>
             {messages.map(({ id, username, body }) => (
               <div key={id} className='text-break'>
                 <b>{username}</b>: {body}
@@ -85,6 +76,7 @@ const ChatPage = () => {
             <NewMessage channel={channel} />
           </div>
         </Col>
+        <Modal />
       </Row>
     </Container>
   );

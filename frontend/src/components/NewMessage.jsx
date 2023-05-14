@@ -30,7 +30,6 @@ const NewMessage = ({ channel }) => {
         };
         await api.sendMessage(message);
         action.resetForm();
-        inputEl.current.focus();
       } catch (error) {
         console.log(error);
       }
@@ -41,10 +40,16 @@ const NewMessage = ({ channel }) => {
 
   useEffect(() => {
     inputEl.current.focus();
-  });
+  }, [channel]);
+
+  useEffect(() => {
+    if (!formik.isSubmitting) {
+      inputEl.current.focus();
+    }
+  }, [formik.isSubmitting]);
 
   return (
-    <Form className='py-1 border rounded-2' onSubmit={formik.handleSubmit}>
+    <Form className='border rounded-2' onSubmit={formik.handleSubmit}>
       <InputGroup>
         <Form.Control
           id="body"
@@ -53,9 +58,10 @@ const NewMessage = ({ channel }) => {
           onBlur={formik.handleBlur}
           placeholder="Введите сообщение"
           value={formik.values.body}
-          className='border-0'
+          disabled={formik.isSubmitting}
+          className='border-1 py-2'
         />
-        <Button type='submit' className='border-0' variant='' disabled={!isValid}>
+        <Button type='submit' className='border-0' variant='' disabled={!isValid || formik.isSubmitting}>
           <FontAwesomeIcon size='xl' icon={faPaperPlane} style={{ color: '#1368fb' }}></FontAwesomeIcon>
         </Button>
       </InputGroup>

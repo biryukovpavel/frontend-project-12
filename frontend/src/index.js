@@ -9,11 +9,24 @@ import reportWebVitals from './reportWebVitals';
 import { io } from 'socket.io-client';
 import { addMessage } from 'slices/messagesSlice.jsx';
 import { ApiContext } from 'contexts/index.jsx';
+import { addChannel, removeChannel, renameChannel } from 'slices/channelsSlice.jsx';
 
 const socket = io();
 
 socket.on('newMessage', (message) => {
   store.dispatch(addMessage({ message }));
+});
+
+socket.on('newChannel', (channel) => {
+  store.dispatch(addChannel({ channel }));
+});
+
+socket.on('removeChannel', ({ id }) => {
+  store.dispatch(removeChannel({ channelId: id }));
+});
+
+socket.on('renameChannel', (channel) => {
+  store.dispatch(renameChannel({ channel }));
 });
 
 const ApiProvider = ({ children }) => {
@@ -27,8 +40,38 @@ const ApiProvider = ({ children }) => {
     });
   });
 
+  const addChannel = (channel) => new Promise((resolve, reject) => {
+    socket.timeout(5000).emit('newChannel', channel, (error, response) => {
+      if (response?.status === 'ok') {
+        resolve(response);
+      }
+
+      reject(error);
+    });
+  });
+
+  const removeChannel = (channelId) => new Promise((resolve, reject) => {
+    socket.timeout(5000).emit('removeChannel', { id: channelId }, (error, response) => {
+      if (response?.status === 'ok') {
+        resolve(response);
+      }
+
+      reject(error);
+    });
+  });
+
+  const renameChannel = (channel) => new Promise((resolve, reject) => {
+    socket.timeout(5000).emit('renameChannel', channel, (error, response) => {
+      if (response?.status === 'ok') {
+        resolve(response);
+      }
+
+      reject(error);
+    });
+  });
+
   return (
-    <ApiContext.Provider value={{ sendMessage }}>
+    <ApiContext.Provider value={{ sendMessage, addChannel, removeChannel, renameChannel }}>
       {children}
     </ApiContext.Provider>
   );
@@ -41,7 +84,7 @@ root.render(
       <ApiProvider>
         <App />
       </ApiProvider>
-    </Provider>,
+    </Provider>
   </React.StrictMode>
 );
 
