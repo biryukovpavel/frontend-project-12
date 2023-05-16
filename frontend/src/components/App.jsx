@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import NotFoundPage from './NotFoundPage';
 import LoginPage from './LoginPage';
@@ -6,6 +6,8 @@ import ChatPage from './ChatPage';
 import React, { useState } from 'react';
 import { AuthContext } from '../contexts/index.jsx';
 import { useAuth } from "../hooks/index.jsx";
+import SignupPage from './SignupPage';
+import { Button, Container, Navbar } from 'react-bootstrap';
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -49,11 +51,26 @@ const UnprivateRoute = ({ children }) => {
   );
 };
 
+const AuthButton = () => {
+  const auth = useAuth();
+
+  return (
+    auth.loggedIn && <Button onClick={auth.logOut}>Выйти</Button>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <div className="d-flex flex-column h-100">
+          <Navbar bg="white" expand="lg" className='shadow-sm'>
+            <Container>
+              <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+              <AuthButton />
+            </Container>
+          </Navbar>
+
           <Routes>
             <Route path='*' element={<NotFoundPage />} />
             <Route
@@ -69,6 +86,14 @@ function App() {
               element={(
                 <UnprivateRoute>
                   <LoginPage />
+                </UnprivateRoute>
+              )}
+            />
+            <Route
+              path='signup'
+              element={(
+                <UnprivateRoute>
+                  <SignupPage />
                 </UnprivateRoute>
               )}
             />
