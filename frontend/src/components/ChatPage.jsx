@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import routes from 'routes';
 import { setInitialState } from 'slices/channelsSlice';
 import NewMessage from './NewMessage.jsx';
@@ -30,6 +31,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const messagesEl = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const requestData = async () => {
@@ -63,7 +65,7 @@ const ChatPage = () => {
         <Col xs={8} md={10} className='p-0 h-100 d-flex flex-column'>
           <div className='bg-light mb-4 p-3 shadow-sm small'>
             <p className='m-0 text-truncate'><b># {channel?.name}</b></p>
-            <span className='text-muted'>{messages.length} сообщений</span>
+            <span className='text-muted'>{messages.length} {t('chatPage.messagesCount', { count: messages.length })}</span>
           </div>
           <div ref={messagesEl} className='overflow-auto px-5'>
             {messages.map(({ id, username, body }) => (

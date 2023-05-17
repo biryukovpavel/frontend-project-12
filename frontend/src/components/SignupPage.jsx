@@ -6,30 +6,42 @@ import { useAuth } from "hooks";
 import React, { useEffect, useRef } from "react";
 import { Card, Col, Container, Row, Image, Form, Button } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import routes from "routes";
 import * as yup from 'yup';
 import avatarImage from '../assets/avatar_1.jpg';
+
+yup.setLocale({
+  mixed: {
+    required: 'errors.required',
+  },
+  string: {
+    min: 'errors.minUsername',
+    max: 'errors.maxUsername',
+  }
+});
 
 const SignupPage = () => {
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const inputEl = useRef(null);
+  const { t } = useTranslation();
 
   const SignupSchema = yup.object().shape({
     username: yup.string()
       .trim()
-      .min(3, 'Минимум 3 буквы')
-      .max(20, 'Максимум 20 букв')
-      .required('Обязательное поле'),
+      .min(3)
+      .max(20)
+      .required(),
     password: yup.string()
       .trim()
-      .min(6, 'Минимум 6 символов')
-      .required('Обязательное поле'),
+      .min(6, 'errors.minPassword')
+      .required(),
     passwordConfirmation: yup.string()
       .trim()
-      .required('Обязательное поле')
-      .oneOf([yup.ref('password'), null], 'Пароли должны совпадать'),
+      .required()
+      .oneOf([yup.ref('password'), null], 'errors.passwordMustEquals'),
   });
 
   const formik = useFormik({
@@ -49,7 +61,7 @@ const SignupPage = () => {
         if (e.isAxiosError && e.response.status === 409) {
           inputEl.current.select();
           action.setStatus({
-            signupFailedMessage: 'Такой пользователь уже существует',
+            signupFailedMessage: 'errors.existsUser',
           });
           return;
         }
@@ -78,12 +90,12 @@ const SignupPage = () => {
                   <Image
                     roundedCircle
                     src={avatarImage}
-                    alt="SignUp"
+                    alt={t('signupPage.signup')}
                   />
                 </Col>
                 <Col xs={12} md={6} className="offset-md-1">
                   <Form onSubmit={formik.handleSubmit}>
-                    <h1 className="text-center mb-4">Регистрация</h1>
+                    <h1 className="text-center mb-4">{t('signupPage.signup')}</h1>
                     <Form.Group className="form-floating mb-4" controlId="username">
                       <Form.Control
                         required
@@ -92,14 +104,14 @@ const SignupPage = () => {
                         onBlur={formik.handleBlur}
                         size="lg"
                         autoComplete="username"
-                        placeholder="Ваш ник"
+                        placeholder={t('signupPage.username')}
                         value={formik.values.username}
                         disabled={formik.isSubmitting}
                         isInvalid={(formik.errors.username && formik.touched.username) || formik.status}
                       />
-                      <Form.Label>Ваш ник</Form.Label>
+                      <Form.Label>{t('signupPage.username')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
-                        {formik.errors.username}
+                        {t(formik.errors.username)}
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="form-floating mb-4" controlId="password">
@@ -110,14 +122,14 @@ const SignupPage = () => {
                         type="password"
                         size="lg"
                         autoComplete="current-password"
-                        placeholder="Пароль"
+                        placeholder={t('signupPage.password')}
                         value={formik.values.password}
                         disabled={formik.isSubmitting}
                         isInvalid={(formik.errors.password && formik.touched.password) || formik.status}
                       />
-                      <Form.Label>Пароль</Form.Label>
+                      <Form.Label>{t('signupPage.password')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
-                        {formik.errors.password}
+                        {t(formik.errors.password)}
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="form-floating mb-4" controlId="passwordConfirmation">
@@ -128,14 +140,14 @@ const SignupPage = () => {
                         type="password"
                         size="lg"
                         autoComplete="current-password"
-                        placeholder="Подтвердите пароль"
+                        placeholder={t('signupPage.passwordConfirmation')}
                         value={formik.values.passwordConfirmation}
                         disabled={formik.isSubmitting}
                         isInvalid={(formik.errors.passwordConfirmation && formik.touched.passwordConfirmation) || formik.status}
                       />
-                      <Form.Label>Подтвердите пароль</Form.Label>
+                      <Form.Label>{t('signupPage.passwordConfirmation')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
-                        {formik.status ? formik.status.signupFailedMessage : formik.errors.passwordConfirmation}
+                        {formik.status ? t(formik.status.signupFailedMessage) : t(formik.errors.passwordConfirmation)}
                       </Form.Control.Feedback>
                     </Form.Group>
                     <div className="d-grid gap-2">
@@ -145,7 +157,7 @@ const SignupPage = () => {
                         size="lg"
                         disabled={!(formik.isValid && formik.dirty) || formik.status || formik.isSubmitting}
                       >
-                        <FontAwesomeIcon icon={faUserPlus} /> Зарегистрироваться
+                        <FontAwesomeIcon icon={faUserPlus} /> {t('signupPage.submit')}
                       </Button>
                     </div>
                   </Form>

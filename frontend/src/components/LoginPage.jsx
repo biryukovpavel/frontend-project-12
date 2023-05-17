@@ -2,6 +2,7 @@ import { Card, Col, Container, Row, Image, Form, Button } from "react-bootstrap"
 import avatarImage from "../assets/avatar.jpg";
 import React, { useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import * as yup from 'yup';
@@ -10,20 +11,24 @@ import axios from "axios";
 import routes from "../routes.js";
 import { useAuth } from "../hooks/index.jsx";
 
+yup.setLocale({
+  mixed: {
+    required: 'errors.required',
+  },
+});
+
 const LoginPage = () => {
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const inputEl = useRef(null);
+  const { t } = useTranslation();
 
   const SignupSchema = yup.object().shape({
     username: yup.string()
-      .min(2, 'Минимум 2 буквы')
-      .max(50, 'Максимум 50 букв')
-      .required('Обязательное поле'),
+      .required(),
     password: yup.string()
-      .min(4, 'Минимум 4 символов')
-      .required('Обязательное поле'),
+      .required(),
   });
 
   const formik = useFormik({
@@ -34,11 +39,6 @@ const LoginPage = () => {
     validationSchema: SignupSchema,
     onSubmit: async (values, action) => {
       try {
-        await axios.post('/api/v1/signup', { username: 'user', password: '123456' });
-      } catch (error) {
-        console.log('user alredy exists')
-      }
-      try {
         const response = await axios.post(routes.loginPath(), values);
         auth.logIn(response.data);
         const { from } = location.state ?? { from: { pathname: '/' } };
@@ -47,7 +47,7 @@ const LoginPage = () => {
         if (e.isAxiosError && e.response.status === 401) {
           inputEl.current.select();
           action.setStatus({
-            authFailedMessage: 'Неверные имя пользователя или пароль',
+            authFailedMessage: 'errors.authFailed',
           });
           return;
         }
@@ -76,12 +76,12 @@ const LoginPage = () => {
                   <Image
                     roundedCircle
                     src={avatarImage}
-                    alt="LogIn"
+                    alt={t('loginPage.login')}
                   />
                 </Col>
                 <Col xs={12} md={6} className="offset-md-1">
                   <Form onSubmit={formik.handleSubmit}>
-                    <h1 className="text-center mb-4">Войти</h1>
+                    <h1 className="text-center mb-4">{t('loginPage.login')}</h1>
                     <Form.Group className="form-floating mb-4" controlId="username">
                       <Form.Control
                         required
@@ -90,13 +90,13 @@ const LoginPage = () => {
                         onBlur={formik.handleBlur}
                         size="lg"
                         autoComplete="username"
-                        placeholder="Ваш ник"
+                        placeholder={t('loginPage.username')}
                         value={formik.values.username}
                         isInvalid={(formik.errors.username && formik.touched.username) || formik.status}
                       />
-                      <Form.Label>Ваш ник</Form.Label>
+                      <Form.Label>{t('loginPage.username')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
-                        {formik.errors.username}
+                        {t(formik.errors.username)}
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="form-floating mb-4" controlId="password">
@@ -107,13 +107,13 @@ const LoginPage = () => {
                         type="password"
                         size="lg"
                         autoComplete="current-password"
-                        placeholder="Пароль"
+                        placeholder={t('loginPage.password')}
                         value={formik.values.password}
                         isInvalid={(formik.errors.password && formik.touched.password) || formik.status}
                       />
-                      <Form.Label>Пароль</Form.Label>
+                      <Form.Label>{t('loginPage.password')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
-                        {formik.status ? formik.status.authFailedMessage : formik.errors.password}
+                        {formik.status ? t(formik.status.authFailedMessage) : t(formik.errors.password)}
                       </Form.Control.Feedback>
                     </Form.Group>
                     <div className="d-grid gap-2">
@@ -123,12 +123,12 @@ const LoginPage = () => {
                         size="lg"
                         disabled={!(formik.isValid && formik.dirty) || formik.status}
                       >
-                        <FontAwesomeIcon icon={faRightToBracket} /> Войти
+                        <FontAwesomeIcon icon={faRightToBracket} /> {t('loginPage.submit')}
                       </Button>
                     </div>
                     <div className="text-center mt-4 pt-2">
                       <p>
-                        Нет аккаунта? <Link to="/signup">Регистрация</Link>
+                        {t('loginPage.noAccount')} <Link to="/signup">{t('loginPage.signup')}</Link>
                       </p>
                     </div>
                   </Form>

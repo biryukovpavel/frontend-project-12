@@ -3,12 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, ButtonGroup, Dropdown, Nav } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
 import { setCurrentChannel } from "slices/channelsSlice";
 import { showModal } from "slices/modalSlice";
 
 const Channels = () => {
   const { channels, currentChannelId } = useSelector((state) => state.channels);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleChoseChannel = (channelId) => {
     dispatch(setCurrentChannel({ channelId }));
@@ -29,7 +31,7 @@ const Channels = () => {
   return (
     <>
       <div className='d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4'>
-        <b>Каналы</b>
+        <b>{t('channels.channels')}</b>
         <Button
           type="button"
           variant=""
@@ -58,8 +60,8 @@ const Channels = () => {
                 <Dropdown.Toggle split variant={channel.id === currentChannelId ? 'secondary' : ''} />
           
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleRemoveChannel(channel.id)}>Удалить</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleRenameChannel(channel.id)}>Переименовать</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleRemoveChannel(channel.id)}>{t('channels.remove')}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleRenameChannel(channel.id)}>{t('channels.rename')}</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               )

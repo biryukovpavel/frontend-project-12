@@ -8,6 +8,7 @@ import { AuthContext } from '../contexts/index.jsx';
 import { useAuth } from "../hooks/index.jsx";
 import SignupPage from './SignupPage';
 import { Button, Container, Navbar } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -53,20 +54,23 @@ const UnprivateRoute = ({ children }) => {
 
 const AuthButton = () => {
   const auth = useAuth();
+  const { t } = useTranslation();
 
   return (
-    auth.loggedIn && <Button onClick={auth.logOut}>Выйти</Button>
+    auth.loggedIn && <Button onClick={auth.logOut}>{t('logout')}</Button>
   );
 };
 
 function App() {
+  const { t } = useTranslation();
+
   return (
     <AuthProvider>
       <BrowserRouter>
         <div className="d-flex flex-column h-100">
           <Navbar bg="white" expand="lg" className='shadow-sm'>
             <Container>
-              <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+              <Navbar.Brand as={Link} to="/">{t('headerText')}</Navbar.Brand>
               <AuthButton />
             </Container>
           </Navbar>

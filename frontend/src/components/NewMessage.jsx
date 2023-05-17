@@ -3,17 +3,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFormik } from "formik";
 import { useApi, useAuth } from "hooks";
 import React, { useEffect, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { Button, Form, InputGroup } from "react-bootstrap";
 import * as yup from 'yup';
+
+yup.setLocale({
+  mixed: {
+    required: 'errors.required',
+  },
+});
 
 const NewMessage = ({ channel }) => {
   const inputEl = useRef(null);
   const { currentUser: { username } } = useAuth();
   const api = useApi();
+  const { t } = useTranslation();
 
   const validationSchema = yup.object().shape({
     body: yup.string().trim()
-      .required('Обязательное поле'),
+      .required(),
   });
 
   const formik = useFormik({
@@ -21,7 +29,7 @@ const NewMessage = ({ channel }) => {
       body: '',
     },
     validationSchema,
-    onSubmit: async ({body}, action) => {
+    onSubmit: async ({ body }, action) => {
       try {
         const message = {
           body,
@@ -56,7 +64,7 @@ const NewMessage = ({ channel }) => {
           ref={inputEl}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          placeholder="Введите сообщение"
+          placeholder={t('chatPage.enterMessage')}
           value={formik.values.body}
           disabled={formik.isSubmitting}
           className='border-1 py-2'
