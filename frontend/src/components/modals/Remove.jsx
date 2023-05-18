@@ -4,6 +4,7 @@ import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { toast } from 'react-toastify';
 
 const Remove = ({ isShow, handleClose }) => {
   const api = useApi();
@@ -17,6 +18,7 @@ const Remove = ({ isShow, handleClose }) => {
     onSubmit: async () => {
       try {
         await api.removeChannel(channelId);
+        toast.success(t('channels.removed'));
         handleClose();
       } catch (error) {
         console.log(error);

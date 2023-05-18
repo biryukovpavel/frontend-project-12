@@ -11,11 +11,16 @@ const ru = {
       passwordMustEquals: 'Пароли должны совпадать',
       authFailed: 'Неверные имя пользователя или пароль',
       existsUser: 'Такой пользователь уже существует',
+      network: 'Ошибка сети',
+      unknown: 'Неизвестная ошибка. Что-то пошло не так',
     },
     channels: {
       channels: 'Каналы',
       remove: 'Удалить',
       rename: 'Переименовать',
+      created: 'Канал создан',
+      renamed: 'Канал переименован',
+      removed: 'Канал удален',
     },
     chatPage: {
       messagesCount_zero: 'сообщений',

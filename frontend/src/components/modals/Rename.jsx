@@ -5,6 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
 
 const getChannelNames = (state) => {
   const { channels } = state.channels;
@@ -50,6 +51,7 @@ const Rename = ({ isShow, handleClose }) => {
           name,
         };
         await api.renameChannel(channel);
+        toast.success(t('channels.renamed'));
         handleClose();
       } catch (error) {
         console.log(error);

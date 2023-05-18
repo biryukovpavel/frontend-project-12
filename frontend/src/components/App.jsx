@@ -8,6 +8,7 @@ import { AuthContext } from '../contexts/index.jsx';
 import { useAuth } from "../hooks/index.jsx";
 import SignupPage from './SignupPage';
 import { Button, Container, Navbar } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const AuthProvider = ({ children }) => {
@@ -61,7 +62,7 @@ const AuthButton = () => {
   );
 };
 
-function App() {
+const App = () => {
   const { t } = useTranslation();
 
   return (
@@ -103,6 +104,7 @@ function App() {
             />
           </Routes>
         </div>
+        <ToastContainer />
       </BrowserRouter>
     </AuthProvider>
   );

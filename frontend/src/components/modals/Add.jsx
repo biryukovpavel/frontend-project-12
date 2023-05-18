@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentChannel } from 'slices/channelsSlice';
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
 
 yup.setLocale({
   mixed: {
@@ -45,6 +46,7 @@ const Add = ({ isShow, handleClose }) => {
         };
         const { data } = await api.addChannel(channel);
         dispatch(setCurrentChannel({ channelId: data.id }));
+        toast.success(t('channels.created'));
         handleClose();
       } catch (error) {
         console.log(error);

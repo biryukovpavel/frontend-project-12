@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import routes from 'routes';
+import { toast } from 'react-toastify';
 import { setInitialState } from 'slices/channelsSlice';
 import NewMessage from './NewMessage.jsx';
 import Channels from './Channels.jsx';
@@ -39,16 +40,21 @@ const ChatPage = () => {
         const { data } = await axios.get(routes.dataPath(), { headers: auth.getAuthHeader() });
         dispatch(setInitialState(data));
       } catch (error) {
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+          return;
+        }
         if (error.response.status === 401) {
           auth.logOut();
           navigate('/login');
+        } else {
+          toast.error(t('errors.network'));
         }
-        console.log(error);
       }
     };
 
     requestData();
-  }, [dispatch, auth, navigate]);
+  }, [dispatch, auth, navigate, t]);
 
   useEffect(() => {
     const lastItem = messagesEl.current.lastElementChild;
