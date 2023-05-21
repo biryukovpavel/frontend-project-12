@@ -35,10 +35,11 @@ const Channels = () => {
         <Button
           type="button"
           variant=""
-          className="p-0 text-primary"
+          className="p-0 text-primary d-flex justify-content-center align-items-center"
           onClick={() => handleShowModal('adding')}
         >
           <FontAwesomeIcon icon={faPlus} size="lg"></FontAwesomeIcon>
+          <span className="visually-hidden">+</span>
         </Button>
       </div>
       <Nav variant='pills' className='flex-column px-2 mb-3 overflow-auto h-100 d-block'>
@@ -57,7 +58,9 @@ const Channels = () => {
                   {channel.name}
                 </Button>
           
-                <Dropdown.Toggle split variant={channel.id === currentChannelId ? 'secondary' : ''} />
+                <Dropdown.Toggle split variant={channel.id === currentChannelId ? 'secondary' : ''}>
+                  <span className="visually-hidden">{t('channels.control')}</span>
+                </Dropdown.Toggle>
           
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => handleRemoveChannel(channel.id)}>{t('channels.remove')}</Dropdown.Item>

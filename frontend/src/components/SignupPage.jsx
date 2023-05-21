@@ -104,7 +104,6 @@ const SignupPage = () => {
                         required
                         ref={inputEl}
                         onChange={handleChange}
-                        onBlur={formik.handleBlur}
                         size="lg"
                         autoComplete="username"
                         placeholder={t('signupPage.username')}
@@ -121,7 +120,6 @@ const SignupPage = () => {
                       <Form.Control
                         required
                         onChange={handleChange}
-                        onBlur={formik.handleBlur}
                         type="password"
                         size="lg"
                         autoComplete="current-password"
@@ -139,7 +137,6 @@ const SignupPage = () => {
                       <Form.Control
                         required
                         onChange={handleChange}
-                        onBlur={formik.handleBlur}
                         type="password"
                         size="lg"
                         autoComplete="current-password"
@@ -158,7 +155,7 @@ const SignupPage = () => {
                         type="submit"
                         variant="outline-primary"
                         size="lg"
-                        disabled={!(formik.isValid && formik.dirty) || formik.status || formik.isSubmitting}
+                        disabled={formik.status || formik.isSubmitting}
                       >
                         <FontAwesomeIcon icon={faUserPlus} /> {t('signupPage.submit')}
                       </Button>
