@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import routes from "../routes.js";
 import { useAuth } from "../hooks/index.jsx";
+import { useRollbar } from "@rollbar/react";
 
 yup.setLocale({
   mixed: {
@@ -23,6 +24,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const inputEl = useRef(null);
   const { t } = useTranslation();
+  const rollbar = useRollbar();
 
   const SignupSchema = yup.object().shape({
     username: yup.string()
@@ -44,6 +46,7 @@ const LoginPage = () => {
         const { from } = location.state ?? { from: { pathname: '/' } };
         navigate(from);
       } catch (e) {
+        rollbar.error(e);
         if (e.isAxiosError && e.response.status === 401) {
           inputEl.current.select();
           action.setStatus({

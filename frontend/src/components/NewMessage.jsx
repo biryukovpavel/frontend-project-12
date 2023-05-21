@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Form, InputGroup } from "react-bootstrap";
 import * as yup from 'yup';
 import leoProfanity from 'leo-profanity';
+import { useRollbar } from "@rollbar/react";
 
 yup.setLocale({
   mixed: {
@@ -19,6 +20,7 @@ const NewMessage = ({ channel }) => {
   const { currentUser: { username } } = useAuth();
   const api = useApi();
   const { t } = useTranslation();
+  const rollbar = useRollbar();
 
   const validationSchema = yup.object().shape({
     body: yup.string().trim()
@@ -40,6 +42,7 @@ const NewMessage = ({ channel }) => {
         await api.sendMessage(message);
         action.resetForm();
       } catch (error) {
+        rollbar.error(error);
         console.log(error);
       }
     },

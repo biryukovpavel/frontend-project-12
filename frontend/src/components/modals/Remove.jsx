@@ -1,3 +1,4 @@
+import { useRollbar } from "@rollbar/react";
 import { useFormik } from "formik";
 import { useApi } from "hooks";
 import React from "react";
@@ -10,6 +11,7 @@ const Remove = ({ isShow, handleClose }) => {
   const api = useApi();
   const { t } = useTranslation();
   const channelId = useSelector((state) => state.modal.channelId);
+  const rollbar = useRollbar();
 
   const formik = useFormik({
     initialValues: {
@@ -21,6 +23,7 @@ const Remove = ({ isShow, handleClose }) => {
         toast.success(t('channels.removed'));
         handleClose();
       } catch (error) {
+        rollbar.error(error);
         console.log(error);
       }
     },

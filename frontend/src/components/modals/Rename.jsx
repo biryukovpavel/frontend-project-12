@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import { useRollbar } from "@rollbar/react";
 
 const getChannelNames = (state) => {
   const { channels } = state.channels;
@@ -24,6 +25,7 @@ const Rename = ({ isShow, handleClose }) => {
   const channel = useSelector(getChannelById(channelId));
   const api = useApi();
   const { t } = useTranslation();
+  const rollbar = useRollbar();
 
   yup.setLocale({
     mixed: {
@@ -54,6 +56,7 @@ const Rename = ({ isShow, handleClose }) => {
         toast.success(t('channels.renamed'));
         handleClose();
       } catch (error) {
+        rollbar.error(error);
         console.log(error);
       }
     },

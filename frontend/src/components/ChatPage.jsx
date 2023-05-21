@@ -11,6 +11,7 @@ import { setInitialState } from 'slices/channelsSlice';
 import NewMessage from './NewMessage.jsx';
 import Channels from './Channels.jsx';
 import Modal from './modals/Modal.jsx';
+import { useRollbar } from '@rollbar/react';
 
 const getCurrentChannel = (state) => {
   const { channels, currentChannelId } = state.channels;
@@ -33,6 +34,7 @@ const ChatPage = () => {
   const dispatch = useDispatch();
   const messagesEl = useRef(null);
   const { t } = useTranslation();
+  const rollbar = useRollbar();
 
   useEffect(() => {
     const requestData = async () => {
@@ -40,6 +42,7 @@ const ChatPage = () => {
         const { data } = await axios.get(routes.dataPath(), { headers: auth.getAuthHeader() });
         dispatch(setInitialState(data));
       } catch (error) {
+        rollbar.error(error);
         if (!error.isAxiosError) {
           toast.error(t('errors.unknown'));
           return;
@@ -54,7 +57,7 @@ const ChatPage = () => {
     };
 
     requestData();
-  }, [dispatch, auth, navigate, t]);
+  }, [dispatch, auth, navigate, t, rollbar]);
 
   useEffect(() => {
     const lastItem = messagesEl.current.lastElementChild;

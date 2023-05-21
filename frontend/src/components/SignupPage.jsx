@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import routes from "routes";
 import * as yup from 'yup';
 import avatarImage from '../assets/avatar_1.jpg';
+import { useRollbar } from "@rollbar/react";
 
 yup.setLocale({
   mixed: {
@@ -27,6 +28,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const inputEl = useRef(null);
   const { t } = useTranslation();
+  const rollbar = useRollbar();
 
   const SignupSchema = yup.object().shape({
     username: yup.string()
@@ -58,6 +60,7 @@ const SignupPage = () => {
         const { from } = location.state ?? { from: { pathname: '/' } };
         navigate(from);
       } catch (e) {
+        rollbar.error(e);
         if (e.isAxiosError && e.response.status === 409) {
           inputEl.current.select();
           action.setStatus({

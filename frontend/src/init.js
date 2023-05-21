@@ -10,6 +10,7 @@ import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import resources from './locales/index.js';
 import leoProfanity from 'leo-profanity';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 
 const init = async () => {
   const socket = io();
@@ -42,6 +43,20 @@ const init = async () => {
 
   leoProfanity.add(leoProfanity.getDictionary('fr'));
   leoProfanity.add(leoProfanity.getDictionary('ru'));
+
+  const rollbarConfig = {
+    accessToken: process.env.REACT_APP_PUBLIC_ROLLBAR_TOKEN,
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    payload: {
+      environment: 'development',
+      client: {
+        javascript: {
+          source_map_enabled: true,
+        },
+      },
+    },
+  };
 
   const ApiProvider = ({ children }) => {
     const sendMessage = (message) =>
@@ -92,11 +107,15 @@ const init = async () => {
   };
 
   return (
-    <Provider store={store}>
-      <ApiProvider>
-        <App />
-      </ApiProvider>
-    </Provider>
+    <RollbarProvider config={rollbarConfig}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <ApiProvider>
+            <App />
+          </ApiProvider>
+        </Provider>
+      </ErrorBoundary>
+    </RollbarProvider>
   );
 };
 

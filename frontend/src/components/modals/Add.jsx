@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentChannel } from 'slices/channelsSlice';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 
 yup.setLocale({
   mixed: {
@@ -26,6 +27,7 @@ const Add = ({ isShow, handleClose }) => {
   const api = useApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const rollbar = useRollbar();
 
   const getValidationSchema = (channels) =>
     yup.object().shape({
@@ -49,6 +51,7 @@ const Add = ({ isShow, handleClose }) => {
         toast.success(t('channels.created'));
         handleClose();
       } catch (error) {
+        rollbar.error(error);
         console.log(error);
       }
     },
