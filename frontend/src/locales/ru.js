@@ -21,6 +21,7 @@ const ru = {
       created: 'Канал создан',
       renamed: 'Канал переименован',
       removed: 'Канал удалён',
+      control: 'Управление каналом',
     },
     chatPage: {
       messagesCount_zero: 'сообщений',
@@ -28,6 +29,7 @@ const ru = {
       messagesCount_few: 'сообщения',
       messagesCount_many: 'сообщений',
       enterMessage: 'Введите сообщение',
+      newMessage: 'Новое сообщение',
     },
     modals: {
       addChannel: 'Добавить канал',

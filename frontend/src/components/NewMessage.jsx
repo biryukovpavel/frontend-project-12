@@ -68,6 +68,7 @@ const NewMessage = ({ channel }) => {
           ref={inputEl}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
+          aria-label={t('chatPage.newMessage')}
           placeholder={t('chatPage.enterMessage')}
           value={formik.values.body}
           disabled={formik.isSubmitting}
