@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from "react";
 import { useTranslation } from 'react-i18next';
 import { Button, Form, InputGroup } from "react-bootstrap";
 import * as yup from 'yup';
+import leoProfanity from 'leo-profanity';
 
 yup.setLocale({
   mixed: {
@@ -32,7 +33,7 @@ const NewMessage = ({ channel }) => {
     onSubmit: async ({ body }, action) => {
       try {
         const message = {
-          body,
+          body: leoProfanity.clean(body),
           channelId: channel.id,
           username: username,
         };
