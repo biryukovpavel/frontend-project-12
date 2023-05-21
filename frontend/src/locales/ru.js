@@ -11,7 +11,7 @@ const ru = {
       passwordMustEquals: 'Пароли должны совпадать',
       authFailed: 'Неверные имя пользователя или пароль',
       existsUser: 'Такой пользователь уже существует',
-      network: 'Ошибка сети',
+      network: 'Ошибка соединения',
       unknown: 'Неизвестная ошибка. Что-то пошло не так',
     },
     channels: {
@@ -20,7 +20,7 @@ const ru = {
       rename: 'Переименовать',
       created: 'Канал создан',
       renamed: 'Канал переименован',
-      removed: 'Канал удален',
+      removed: 'Канал удалён',
     },
     chatPage: {
       messagesCount_zero: 'сообщений',
@@ -54,7 +54,7 @@ const ru = {
     },
     signupPage: {
       signup: 'Регистрация',
-      username: 'Ваш ник',
+      username: 'Имя пользователя',
       password: 'Пароль',
       passwordConfirmation: 'Подтвердите пароль',
       submit: 'Зарегистрироваться',
