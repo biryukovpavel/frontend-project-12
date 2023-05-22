@@ -1,19 +1,21 @@
-import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter, Link, Navigate, Route, Routes, useLocation,
+} from 'react-router-dom';
 
-import NotFoundPage from './NotFoundPage';
-import LoginPage from './LoginPage';
-import ChatPage from './ChatPage';
 import React, { useState } from 'react';
-import { AuthContext } from '../contexts/index.jsx';
-import { useAuth } from "../hooks/index.jsx";
-import SignupPage from './SignupPage';
 import { Button, Container, Navbar } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import NotFoundPage from './NotFoundPage';
+import LoginPage from './LoginPage';
+import ChatPage from './ChatPage';
+import { AuthContext } from '../contexts/index.jsx';
+import { useAuth } from '../hooks/index.jsx';
+import SignupPage from './SignupPage';
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
-  const [loggedIn, setLoggedIn] = useState(currentUser ? true : false);
+  const [loggedIn, setLoggedIn] = useState(!!currentUser);
 
   const logIn = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
@@ -29,7 +31,10 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut, getAuthHeader, currentUser }}>
+    <AuthContext.Provider value={{
+      loggedIn, logIn, logOut, getAuthHeader, currentUser,
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -69,7 +74,7 @@ const App = () => {
     <AuthProvider>
       <BrowserRouter>
         <div className="d-flex flex-column h-100">
-          <Navbar bg="white" expand="lg" className='shadow-sm'>
+          <Navbar bg="white" expand="lg" className="shadow-sm">
             <Container>
               <Navbar.Brand as={Link} to="/">{t('headerText')}</Navbar.Brand>
               <AuthButton />
@@ -77,9 +82,9 @@ const App = () => {
           </Navbar>
 
           <Routes>
-            <Route path='*' element={<NotFoundPage />} />
+            <Route path="*" element={<NotFoundPage />} />
             <Route
-              path='/'
+              path="/"
               element={(
                 <PrivateRoute>
                   <ChatPage />
@@ -87,7 +92,7 @@ const App = () => {
               )}
             />
             <Route
-              path='login'
+              path="login"
               element={(
                 <UnprivateRoute>
                   <LoginPage />
@@ -95,7 +100,7 @@ const App = () => {
               )}
             />
             <Route
-              path='signup'
+              path="signup"
               element={(
                 <UnprivateRoute>
                   <SignupPage />
@@ -108,6 +113,6 @@ const App = () => {
       </BrowserRouter>
     </AuthProvider>
   );
-}
+};
 
 export default App;

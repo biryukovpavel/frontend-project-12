@@ -1,13 +1,13 @@
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useFormik } from "formik";
-import { useApi, useAuth } from "hooks";
-import React, { useEffect, useRef } from "react";
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useFormik } from 'formik';
+import { useApi, useAuth } from 'hooks';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import * as yup from 'yup';
 import leoProfanity from 'leo-profanity';
-import { useRollbar } from "@rollbar/react";
+import { useRollbar } from '@rollbar/react';
 
 yup.setLocale({
   mixed: {
@@ -37,7 +37,7 @@ const NewMessage = ({ channel }) => {
         const message = {
           body: leoProfanity.clean(body),
           channelId: channel.id,
-          username: username,
+          username,
         };
         await api.sendMessage(message);
         action.resetForm();
@@ -61,7 +61,7 @@ const NewMessage = ({ channel }) => {
   }, [formik.isSubmitting]);
 
   return (
-    <Form className='border rounded-2' onSubmit={formik.handleSubmit}>
+    <Form className="border rounded-2" onSubmit={formik.handleSubmit}>
       <InputGroup>
         <Form.Control
           id="body"
@@ -72,10 +72,10 @@ const NewMessage = ({ channel }) => {
           placeholder={t('chatPage.enterMessage')}
           value={formik.values.body}
           disabled={formik.isSubmitting}
-          className='border-1 py-2'
+          className="border-1 py-2"
         />
-        <Button type='submit' className='border-0' variant='' disabled={!isValid || formik.isSubmitting}>
-          <FontAwesomeIcon size='xl' icon={faPaperPlane} style={{ color: '#1368fb' }}></FontAwesomeIcon>
+        <Button type="submit" className="border-0" variant="" disabled={!isValid || formik.isSubmitting}>
+          <FontAwesomeIcon size="xl" icon={faPaperPlane} style={{ color: '#1368fb' }} />
         </Button>
       </InputGroup>
     </Form>

@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import routes from 'routes';
 import { toast } from 'react-toastify';
 import { setInitialState } from 'slices/channelsSlice';
+import { useRollbar } from '@rollbar/react';
 import NewMessage from './NewMessage.jsx';
 import Channels from './Channels.jsx';
 import Modal from './modals/Modal.jsx';
-import { useRollbar } from '@rollbar/react';
 
 const getCurrentChannel = (state) => {
   const { channels, currentChannelId } = state.channels;
@@ -65,25 +65,36 @@ const ChatPage = () => {
   }, [messages.length]);
 
   return (
-    <Container className='h-100 my-4 overflow-hidden rounded shadow'>
-      <Row className='h-100 bg-white flex-md-row'>
-        <Col xs={4} md={2} className='border-end px-0 bg-light flex-column h-100 d-flex'>
+    <Container className="h-100 my-4 overflow-hidden rounded shadow">
+      <Row className="h-100 bg-white flex-md-row">
+        <Col xs={4} md={2} className="border-end px-0 bg-light flex-column h-100 d-flex">
           <Channels />
         </Col>
 
-        <Col xs={8} md={10} className='p-0 h-100 d-flex flex-column'>
-          <div className='bg-light mb-4 p-3 shadow-sm small'>
-            <p className='m-0 text-truncate'><b># {channel?.name}</b></p>
-            <span className='text-muted'>{messages.length} {t('chatPage.messagesCount', { count: messages.length })}</span>
+        <Col xs={8} md={10} className="p-0 h-100 d-flex flex-column">
+          <div className="bg-light mb-4 p-3 shadow-sm small">
+            <p className="m-0 text-truncate">
+              <b>
+                #
+                {channel?.name}
+              </b>
+            </p>
+            <span className="text-muted">
+              {messages.length}
+              {' '}
+              {t('chatPage.messagesCount', { count: messages.length })}
+            </span>
           </div>
-          <div ref={messagesEl} className='overflow-auto px-5'>
+          <div ref={messagesEl} className="overflow-auto px-5">
             {messages.map(({ id, username, body }) => (
-              <div key={id} className='text-break'>
-                <b>{username}</b>: {body}
+              <div key={id} className="text-break">
+                <b>{username}</b>
+                :
+                {body}
               </div>
             ))}
           </div>
-          <div className='mt-auto px-3 py-3'>
+          <div className="mt-auto px-3 py-3">
             <NewMessage channel={channel} />
           </div>
         </Col>

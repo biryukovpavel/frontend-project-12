@@ -1,10 +1,10 @@
-import { useRollbar } from "@rollbar/react";
-import { useFormik } from "formik";
-import { useApi } from "hooks";
-import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useRollbar } from '@rollbar/react';
+import { useFormik } from 'formik';
+import { useApi } from 'hooks';
+import React from 'react';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const Remove = ({ isShow, handleClose }) => {
@@ -36,15 +36,15 @@ const Remove = ({ isShow, handleClose }) => {
       </Modal.Header>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Body>
-          <Form.Group className='form-floating mb-3' controlId='name'>
+          <Form.Group className="form-floating mb-3" controlId="name">
             <p>{t('modals.removeBodyText')}</p>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose} disabled={formik.isSubmitting}>
+          <Button variant="secondary" onClick={handleClose} disabled={formik.isSubmitting}>
             {t('modals.cancel')}
           </Button>
-          <Button variant='danger' type='submit' disabled={formik.isSubmitting}>
+          <Button variant="danger" type="submit" disabled={formik.isSubmitting}>
             {t('modals.remove')}
           </Button>
         </Modal.Footer>

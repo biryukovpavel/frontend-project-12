@@ -1,4 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+/* eslint-disable no-param-reassign */
+
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   channels: [],
@@ -39,5 +41,7 @@ const channelsSlice = createSlice({
   },
 });
 
-export const { setInitialState, setCurrentChannel, addChannel, removeChannel, renameChannel } = channelsSlice.actions;
+export const {
+  setInitialState, setCurrentChannel, addChannel, removeChannel, renameChannel,
+} = channelsSlice.actions;
 export default channelsSlice.reducer;

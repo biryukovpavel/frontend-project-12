@@ -1,16 +1,18 @@
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-import { useFormik } from "formik";
-import { useAuth } from "hooks";
-import React, { useEffect, useRef } from "react";
-import { Card, Col, Container, Row, Image, Form, Button } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { useAuth } from 'hooks';
+import React, { useEffect, useRef } from 'react';
+import {
+  Card, Col, Container, Row, Image, Form, Button,
+} from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import routes from "routes";
+import routes from 'routes';
 import * as yup from 'yup';
+import { useRollbar } from '@rollbar/react';
 import avatarImage from '../assets/avatar_1.jpg';
-import { useRollbar } from "@rollbar/react";
 
 yup.setLocale({
   mixed: {
@@ -19,7 +21,7 @@ yup.setLocale({
   string: {
     min: 'errors.minUsername',
     max: 'errors.maxUsername',
-  }
+  },
 });
 
 const SignupPage = () => {
@@ -109,7 +111,7 @@ const SignupPage = () => {
                         placeholder={t('signupPage.username')}
                         value={formik.values.username}
                         disabled={formik.isSubmitting}
-                        isInvalid={(formik.errors.username && formik.touched.username) || formik.status}
+                        isInvalid={formik.errors.username || formik.status}
                       />
                       <Form.Label>{t('signupPage.username')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
@@ -126,7 +128,7 @@ const SignupPage = () => {
                         placeholder={t('signupPage.password')}
                         value={formik.values.password}
                         disabled={formik.isSubmitting}
-                        isInvalid={(formik.errors.password && formik.touched.password) || formik.status}
+                        isInvalid={formik.errors.password || formik.status}
                       />
                       <Form.Label>{t('signupPage.password')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
@@ -143,11 +145,13 @@ const SignupPage = () => {
                         placeholder={t('signupPage.passwordConfirmation')}
                         value={formik.values.passwordConfirmation}
                         disabled={formik.isSubmitting}
-                        isInvalid={(formik.errors.passwordConfirmation && formik.touched.passwordConfirmation) || formik.status}
+                        isInvalid={formik.errors.passwordConfirmation || formik.status}
                       />
                       <Form.Label>{t('signupPage.passwordConfirmation')}</Form.Label>
                       <Form.Control.Feedback type="invalid">
-                        {formik.status ? t(formik.status.signupFailedMessage) : t(formik.errors.passwordConfirmation)}
+                        {formik.status
+                          ? t(formik.status.signupFailedMessage)
+                          : t(formik.errors.passwordConfirmation)}
                       </Form.Control.Feedback>
                     </Form.Group>
                     <div className="d-grid gap-2">
@@ -157,7 +161,9 @@ const SignupPage = () => {
                         size="lg"
                         disabled={formik.status || formik.isSubmitting}
                       >
-                        <FontAwesomeIcon icon={faUserPlus} /> {t('signupPage.submit')}
+                        <FontAwesomeIcon icon={faUserPlus} />
+                        {' '}
+                        {t('signupPage.submit')}
                       </Button>
                     </div>
                   </Form>

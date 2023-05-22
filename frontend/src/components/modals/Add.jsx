@@ -21,6 +21,12 @@ const getChannelNames = (state) => {
   return channels.map((channel) => channel.name.trim());
 };
 
+const getValidationSchema = (channels) => yup.object().shape({
+  name: yup.string().trim()
+    .required()
+    .notOneOf(channels),
+});
+
 const Add = ({ isShow, handleClose }) => {
   const inputEl = useRef(null);
   const channels = useSelector(getChannelNames);
@@ -28,13 +34,6 @@ const Add = ({ isShow, handleClose }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const rollbar = useRollbar();
-
-  const getValidationSchema = (channels) =>
-    yup.object().shape({
-      name: yup.string().trim()
-        .required()
-        .notOneOf(channels),
-    });
 
   const formik = useFormik({
     initialValues: {
@@ -70,7 +69,7 @@ const Add = ({ isShow, handleClose }) => {
       </Modal.Header>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Body>
-          <Form.Group className='form-floating mb-3' controlId='name'>
+          <Form.Group className="form-floating mb-3" controlId="name">
             <Form.Control
               required
               ref={inputEl}
@@ -82,16 +81,16 @@ const Add = ({ isShow, handleClose }) => {
               isInvalid={(formik.errors.name && formik.touched.name) || formik.status}
             />
             <Form.Label>{t('modals.channelName')}</Form.Label>
-            <Form.Control.Feedback type='invalid'>
+            <Form.Control.Feedback type="invalid">
               {t(formik.errors.name)}
             </Form.Control.Feedback>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose} disabled={formik.isSubmitting}>
+          <Button variant="secondary" onClick={handleClose} disabled={formik.isSubmitting}>
             {t('modals.cancel')}
           </Button>
-          <Button variant='primary' type='submit' disabled={!(formik.isValid && formik.dirty) || formik.status || formik.isSubmitting}>
+          <Button variant="primary" type="submit" disabled={!(formik.isValid && formik.dirty) || formik.status || formik.isSubmitting}>
             {t('modals.submit')}
           </Button>
         </Modal.Footer>

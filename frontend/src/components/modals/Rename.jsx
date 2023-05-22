@@ -1,12 +1,12 @@
-import { useFormik } from "formik";
-import { useApi } from "hooks";
-import React, { useEffect, useRef } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useFormik } from 'formik';
+import { useApi } from 'hooks';
+import React, { useEffect, useRef } from 'react';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-import { useRollbar } from "@rollbar/react";
+import { useRollbar } from '@rollbar/react';
 
 const getChannelNames = (state) => {
   const { channels } = state.channels;
@@ -17,6 +17,12 @@ const getChannelById = (channelId) => (state) => {
   const { channels } = state.channels;
   return channels.find((channel) => channel.id === channelId);
 };
+
+const getValidationSchema = (channels) => yup.object().shape({
+  name: yup.string().trim()
+    .required()
+    .notOneOf(channels),
+});
 
 const Rename = ({ isShow, handleClose }) => {
   const inputEl = useRef(null);
@@ -34,13 +40,6 @@ const Rename = ({ isShow, handleClose }) => {
     },
   });
 
-  const getValidationSchema = (channels) =>
-    yup.object().shape({
-      name: yup.string().trim()
-        .required()
-        .notOneOf(channels),
-    });
-
   const formik = useFormik({
     initialValues: {
       name: channel.name,
@@ -48,11 +47,11 @@ const Rename = ({ isShow, handleClose }) => {
     validationSchema: getValidationSchema(channels),
     onSubmit: async ({ name }) => {
       try {
-        const channel = {
+        const newChannel = {
           id: channelId,
           name,
         };
-        await api.renameChannel(channel);
+        await api.renameChannel(newChannel);
         toast.success(t('channels.renamed'));
         handleClose();
       } catch (error) {
@@ -75,7 +74,7 @@ const Rename = ({ isShow, handleClose }) => {
       </Modal.Header>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Body>
-          <Form.Group className='form-floating mb-3' controlId='name'>
+          <Form.Group className="form-floating mb-3" controlId="name">
             <Form.Control
               required
               ref={inputEl}
@@ -87,22 +86,22 @@ const Rename = ({ isShow, handleClose }) => {
               isInvalid={(formik.errors.name && formik.touched.name) || formik.status}
             />
             <Form.Label>{t('modals.channelName')}</Form.Label>
-            <Form.Control.Feedback type='invalid'>
+            <Form.Control.Feedback type="invalid">
               {t(formik.errors.name)}
             </Form.Control.Feedback>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose} disabled={formik.isSubmitting}>
+          <Button variant="secondary" onClick={handleClose} disabled={formik.isSubmitting}>
             {t('modals.cancel')}
           </Button>
-          <Button variant='primary' type='submit' disabled={!(formik.isValid && formik.dirty) || formik.status || formik.isSubmitting}>
+          <Button variant="primary" type="submit" disabled={!(formik.isValid && formik.dirty) || formik.status || formik.isSubmitting}>
             {t('modals.submit')}
           </Button>
         </Modal.Footer>
       </Form>
     </Modal>
-  )
+  );
 };
 
 export default Rename;
