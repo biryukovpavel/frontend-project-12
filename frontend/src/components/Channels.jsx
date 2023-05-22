@@ -35,7 +35,7 @@ const Channels = () => {
         <Button
           type="button"
           variant=""
-          className="p-0 text-primary"
+          className="p-0 text-primary d-flex justify-content-center align-items-center"
           onClick={() => handleShowModal('adding')}
         >
           <FontAwesomeIcon icon={faPlus} size="lg"></FontAwesomeIcon>
